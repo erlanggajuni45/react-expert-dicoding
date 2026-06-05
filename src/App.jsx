@@ -6,19 +6,21 @@ import HomePage from './pages/HomePage';
 import Navigation from './components/Navigation';
 import RegisterPage from './pages/RegisterPage';
 import DetailPage from './pages/DetailPage';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { asyncPreloadProcess } from './states/isPreload/action';
+import { asyncUnsetAuthUser } from './states/authUser/action';
 
 function App() {
   const { authUser = null, isPreload = false } = useSelector((states) => states);
 
-  const dispatch = null; // @TODO: get dispatch function from store
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    // @TODO: dispatch async action to preload app
+    dispatch(asyncPreloadProcess());
   }, [dispatch]);
 
   const onSignOut = () => {
-    // @TODO: dispatch async action to sign out
+    dispatch(asyncUnsetAuthUser());
   };
 
   if (isPreload) {

@@ -6,23 +6,19 @@ import HomePage from './pages/HomePage';
 import Navigation from './components/Navigation';
 import RegisterPage from './pages/RegisterPage';
 import DetailPage from './pages/DetailPage';
+import { useSelector } from 'react-redux';
 
 function App() {
-  const {
-    authUser = null,
-    isPreload = false,
-  } = {}; // @TODO: get authUser and isPreLoad state from store
+  const { authUser = null, isPreload = false } = useSelector((states) => states);
 
   const dispatch = null; // @TODO: get dispatch function from store
 
   useEffect(() => {
     // @TODO: dispatch async action to preload app
-
   }, [dispatch]);
 
   const onSignOut = () => {
     // @TODO: dispatch async action to sign out
-
   };
 
   if (isPreload) {
@@ -35,8 +31,14 @@ function App() {
         <Loading />
         <main>
           <Routes>
-            <Route path="/*" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
+            <Route
+              path='/*'
+              element={<LoginPage />}
+            />
+            <Route
+              path='/register'
+              element={<RegisterPage />}
+            />
           </Routes>
         </main>
       </>
@@ -46,14 +48,23 @@ function App() {
   return (
     <>
       <Loading />
-      <div className="app-container">
+      <div className='app-container'>
         <header>
-          <Navigation authUser={authUser} signOut={onSignOut} />
+          <Navigation
+            authUser={authUser}
+            signOut={onSignOut}
+          />
         </header>
         <main>
           <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/talks/:id" element={<DetailPage />} />
+            <Route
+              path='/'
+              element={<HomePage />}
+            />
+            <Route
+              path='/talks/:id'
+              element={<DetailPage />}
+            />
           </Routes>
         </main>
       </div>

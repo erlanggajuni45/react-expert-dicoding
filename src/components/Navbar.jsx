@@ -12,7 +12,7 @@ export default function Navbar() {
         <div className='flex items-center gap-4'>
           <Trophy className='h-4 w-4' /> <span className='hidden md:inline'>Leaderboard</span>
           <Link to='/login'>
-            <button className='flex items-center gap-2 border border-gray-200 rounded px-2 py-1 text-sm hover:bg-gray-100 transition-colors'>
+            <button className='flex items-center gap-2 border border-gray-200 rounded px-2 py-1 text-sm hover:bg-gray-100 transition-colors cursor-pointer'>
               <LogIn className='h-4 w-4' /> Login
             </button>
           </Link>

@@ -1,5 +1,6 @@
 import Navbar from './components/Navbar';
 import { Route, Routes } from 'react-router';
+import LoginPage from './pages/LoginPage';
 
 function App() {
   return (
@@ -16,7 +17,7 @@ function App() {
         />
         <Route
           path='/login'
-          element={<h1>Login</h1>}
+          element={<LoginPage />}
         />
         <Route
           path='/register'

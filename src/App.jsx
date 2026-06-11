@@ -1,6 +1,7 @@
 import Navbar from './components/Navbar';
 import { Route, Routes } from 'react-router';
 import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 
 function App() {
   return (
@@ -21,7 +22,7 @@ function App() {
         />
         <Route
           path='/register'
-          element={<h1>Register</h1>}
+          element={<RegisterPage />}
         />
       </Routes>
     </div>

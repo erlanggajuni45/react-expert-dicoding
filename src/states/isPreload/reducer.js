@@ -7,7 +7,7 @@ const isPreloadReducer = (isPreload = true, action = {}) => {
     DEFAULT: () => isPreload,
   };
 
-  return (action[type] || actions.DEFAULT)();
+  return (actions[type] || actions.DEFAULT)();
 };
 
 export default isPreloadReducer;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router';
 import useInput from '../hooks/useInput';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,6 +13,10 @@ export default function LoginPage() {
 
   const [email, onEmailChange] = useInput('');
   const [password, onPasswordChange] = useInput('');
+
+  useEffect(() => {
+    if (authUser) navigate('/');
+  });
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -34,7 +38,6 @@ export default function LoginPage() {
 
     try {
       await dispatch(asyncSetAuthUser({ email, password }));
-      navigate('/');
     } catch (err) {
       console.error(err.message);
     }

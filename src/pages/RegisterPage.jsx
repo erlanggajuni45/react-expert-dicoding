@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import useInput from '../hooks/useInput';
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,13 +6,21 @@ import { asyncRegisterUser } from '../states/users/action';
 import { useNavigate } from 'react-router';
 
 export default function RegisterPage() {
-  const isLoading = useSelector((states) => states.ui.loadingCount > 0);
+  const isLoading = useSelector((state) => state.ui.loadingCount > 0);
+  const authUser = useSelector((state) => state.authUser);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [name, onNameChange] = useInput();
   const [email, onEmailChange] = useInput();
   const [password, onPasswordChange] = useInput();
+
+  useEffect(() => {
+    if (authUser) {
+      navigate('/');
+    }
+  }, [authUser, dispatch]);
 
   const onSubmit = async (e) => {
     e.preventDefault();

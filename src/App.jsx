@@ -1,16 +1,25 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Navbar from './components/Navbar';
 import { Route, Routes } from 'react-router';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import { Toaster } from 'sonner';
 import LoadingBar from './components/LoadingBar';
+import { useDispatch } from 'react-redux';
+import { asyncPreloadProcess } from './states/isPreload/action';
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(asyncPreloadProcess());
+  }, [dispatch]);
+
   return (
     <div className='bg-zinc-50 text-zinc-900 min-h-screen'>
       <LoadingBar />
       <Navbar />
+
       <Routes>
         <Route
           path='/'

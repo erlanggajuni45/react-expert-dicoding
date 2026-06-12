@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 export default function LoadingBar() {
-  const isLoading = useSelector((states) => states.ui.loadingCount > 0);
+  const isLoading = useSelector((state) => state.ui.loadingCount > 0);
 
   if (!isLoading) return null;
 

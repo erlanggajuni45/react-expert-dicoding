@@ -7,6 +7,7 @@ import { Toaster } from 'sonner';
 import LoadingBar from './components/LoadingBar';
 import { useDispatch } from 'react-redux';
 import { asyncPreloadProcess } from './states/isPreload/action';
+import HomePage from './pages/HomePage';
 
 function App() {
   const dispatch = useDispatch();
@@ -23,7 +24,7 @@ function App() {
       <Routes>
         <Route
           path='/'
-          element={<h1>Home</h1>}
+          element={<HomePage />}
         />
         <Route
           path='/leaderboard'

@@ -1,13 +1,16 @@
 import React from 'react';
 import { CirclePlus, LogIn, LogOut, MessageSquare, Trophy } from 'lucide-react';
 import { Link } from 'react-router';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { asyncUnsetAuthUser } from '../states/authUser/action';
 
 export default function Navbar() {
   const authUser = useSelector((state) => state.authUser);
 
+  const dispatch = useDispatch();
+
   const onLogout = () => {
-    alert('logout');
+    dispatch(asyncUnsetAuthUser());
   };
 
   return (
@@ -42,7 +45,7 @@ export default function Navbar() {
               />
 
               <button onClick={onLogout}>
-                <LogOut className='h-5 w-5' />
+                <LogOut className='h-5 w-5 cursor-pointer' />
               </button>
             </>
           ) : (

@@ -2,9 +2,9 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 export default function LoadingBar() {
-  const loading = useSelector((states) => states.ui.loadingCount > 0);
+  const isLoading = useSelector((states) => states.ui.loadingCount > 0);
 
-  if (!loading) return null;
+  if (!isLoading) return null;
 
   return (
     <div className='fixed top-0 left-0 w-full h-1 z-50 overflow-hidden bg-transparent'>

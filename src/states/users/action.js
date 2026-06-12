@@ -33,6 +33,7 @@ const asyncGetAllUsers = () => {
       dispatch(receiveUsersActionCreator(users));
     } catch (err) {
       alert(err.message);
+      throw err;
     } finally {
       dispatch(finishLoadingActionCreator());
     }

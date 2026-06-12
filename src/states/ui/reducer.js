@@ -1,7 +1,9 @@
 import { ActionType } from './action';
 
-const uiReducer = (loadingCount = 0, action = {}) => {
-  const { type, payload } = action;
+const initialState = { loadingCount: 0 };
+
+const uiReducer = (loadingCount = initialState.loadingCount, action = {}) => {
+  const { type } = action;
 
   const actions = {
     [ActionType.START_LOADING]: () => (loadingCount += 1),

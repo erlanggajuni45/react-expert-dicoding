@@ -1,15 +1,43 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import useInput from '../hooks/useInput';
+import { useDispatch, useSelector } from 'react-redux';
+import { asyncSetAuthUser } from '../states/authUser/action';
 
 export default function LoginPage() {
+  const isLoading = useSelector((state) => state.ui.loadingCount > 0);
+  const authUser = useSelector((state) => state.authUser);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [email, onEmailChange] = useInput('');
   const [password, onPasswordChange] = useInput('');
 
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(email, password);
+    if (!email) {
+      alert('Email tidak boleh kosong!');
+      return;
+    }
+
+    if (!password) {
+      alert('Password tidak boleh kosong!');
+      return;
+    }
+
+    if (password.length < 6) {
+      alert('Password minimal memiliki 6 karakter!');
+      return;
+    }
+
+    try {
+      await dispatch(asyncSetAuthUser({ email, password }));
+      navigate('/');
+    } catch (err) {
+      console.error(err.message);
+    }
   };
 
   return (
@@ -41,6 +69,7 @@ export default function LoginPage() {
           <button
             type='submit'
             className='cursor-pointer bg-black text-white py-2 px-4 mt-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500'
+            disabled={isLoading}
           >
             Masuk
           </button>

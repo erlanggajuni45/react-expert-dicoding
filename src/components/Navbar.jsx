@@ -31,7 +31,7 @@ export default function Navbar() {
           </Link>
           {authUser ? (
             <>
-              <Link to='/add'>
+              <Link to='/threads/new'>
                 <button className='cursor-pointer bg-black text-white rounded-md py-2 px-2.5 flex items-center gap-2'>
                   <CirclePlus className='h-4 w-4' />{' '}
                   <span className='hidden md:inline'>Thread Baru</span>

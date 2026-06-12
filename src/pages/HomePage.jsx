@@ -2,7 +2,8 @@ import React, { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { asyncGetThreads } from '../states/threads/action';
 import { asyncGetAllUsers } from '../states/users/action';
-import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import Skeleton from 'react-loading-skeleton';
+import ThreadCard from '../components/ThreadCard';
 
 export default function HomePage() {
   const isLoading = useSelector((state) => state.ui.loadingCount > 0);
@@ -30,18 +31,26 @@ export default function HomePage() {
       </div>
 
       {isLoading ? (
-        [0, 1, 2].map((item) => (
-          <div
-            key={item}
-            className='mt-2'
-          >
-            <Skeleton count={5} />
-          </div>
-        ))
+        <div className='flex flex-col gap-2'>
+          {[0, 1, 2].map((item) => (
+            <Skeleton
+              key={item}
+              count={5}
+            />
+          ))}
+        </div>
       ) : threads.length === 0 ? (
         <div className='text-center text-zinc-500 py-16'>Tidak ada thread.</div>
       ) : (
-        <div></div>
+        <div className='flex flex-col gap-2'>
+          {threads.map((thread) => (
+            <ThreadCard
+              key={thread.id}
+              owner={userMap[thread.ownerId]}
+              thread={thread}
+            />
+          ))}
+        </div>
       )}
     </div>
   );

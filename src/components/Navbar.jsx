@@ -1,3 +1,4 @@
+import React from 'react';
 import { LogIn, MessageSquare, Trophy } from 'lucide-react';
 import { Link } from 'react-router';
 

@@ -34,7 +34,7 @@ const api = (() => {
     const { status, message, data } = responseJson;
 
     if (status !== 'success') {
-      throw new Error(responseJson.message);
+      throw new Error(message);
     }
 
     return data.user;

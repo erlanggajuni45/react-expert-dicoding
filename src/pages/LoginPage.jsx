@@ -1,3 +1,4 @@
+import React from 'react';
 import { Link } from 'react-router';
 
 export default function LoginPage() {
@@ -8,13 +9,13 @@ export default function LoginPage() {
         <p className='text-gray-500 text-sm py-1'>Masuk untuk ikut berdiskusi</p>
 
         <form className='flex flex-col gap-2 mt-4'>
-          <label for='email'>Email</label>
+          <label htmlFor='email'>Email</label>
           <input
             type='email'
             id='email'
             className='border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500'
           />
-          <label for='password'>Password</label>
+          <label htmlFor='password'>Password</label>
           <input
             type='password'
             id='password'

@@ -8,6 +8,7 @@ import LoadingBar from './components/LoadingBar';
 import { useDispatch } from 'react-redux';
 import { asyncPreloadProcess } from './states/isPreload/action';
 import HomePage from './pages/HomePage';
+import AddThreadPage from './pages/AddThreadPage';
 
 function App() {
   const dispatch = useDispatch();
@@ -37,6 +38,10 @@ function App() {
         <Route
           path='/register'
           element={<RegisterPage />}
+        />
+        <Route
+          path='/threads/new'
+          element={<AddThreadPage />}
         />
       </Routes>
       <Toaster

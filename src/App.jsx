@@ -20,43 +20,42 @@ function App() {
     dispatch(asyncPreloadProcess());
   }, [dispatch]);
 
-  if (isPreload) return null;
-
   return (
     <div className='bg-zinc-50 text-zinc-900 min-h-screen'>
       <LoadingBar />
-      <Navbar />
 
-      <Routes>
-        <Route
-          path='/'
-          element={<HomePage />}
-        />
-        <Route
-          path='/leaderboard'
-          element={<h1>Leaderboard</h1>}
-        />
-        <Route
-          path='/login'
-          element={<LoginPage />}
-        />
-        <Route
-          path='/register'
-          element={<RegisterPage />}
-        />
-        <Route
-          path='/threads/new'
-          element={<AddThreadPage />}
-        />
-        <Route
-          path='/threads/:threadId'
-          element={<DetailThreadPage />}
-        />
-        <Route
-          path='/leaderboards'
-          element={<LeaderboardsPage />}
-        />
-      </Routes>
+      {!isPreload && (
+        <>
+          <Navbar />
+
+          <Routes>
+            <Route
+              path='/'
+              element={<HomePage />}
+            />
+            <Route
+              path='/login'
+              element={<LoginPage />}
+            />
+            <Route
+              path='/register'
+              element={<RegisterPage />}
+            />
+            <Route
+              path='/threads/new'
+              element={<AddThreadPage />}
+            />
+            <Route
+              path='/threads/:threadId'
+              element={<DetailThreadPage />}
+            />
+            <Route
+              path='/leaderboard'
+              element={<LeaderboardsPage />}
+            />
+          </Routes>
+        </>
+      )}
       <Toaster
         position='top-right'
         richColors

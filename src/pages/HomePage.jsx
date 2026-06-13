@@ -1,15 +1,17 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { asyncGetThreads } from '../states/threads/action';
 import { asyncGetAllUsers } from '../states/users/action';
 import Skeleton from 'react-loading-skeleton';
 import ThreadCard from '../components/ThreadCard';
 import { Link } from 'react-router';
+import CategoryFilter from '../components/CategoryFilter';
 
 export default function HomePage() {
   const isLoading = useSelector((state) => state.ui.loadingCount > 0);
   const threads = useSelector((state) => state.threads);
   const users = useSelector((state) => state.users);
+  const [filter, setFilter] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -24,12 +26,23 @@ export default function HomePage() {
   );
   const userMap = useMemo(() => Object.fromEntries(users.map((user) => [user.id, user])), [users]);
 
+  const filteredThread = useMemo(
+    () => (filter ? threads.filter((thread) => thread.category === filter) : threads),
+    [threads, filter],
+  );
+
   return (
     <div className='max-w-3xl mx-auto px-4 py-8'>
       <div className='mb-6'>
         <h1 className='font-semibold text-2xl'>Diskusi Terbaru</h1>
         <p className='text-gray-500'>Bergabunglah dalam percakapan komunitas.</p>
       </div>
+
+      <CategoryFilter
+        categories={categories}
+        selected={filter}
+        onSelected={setFilter}
+      />
 
       {isLoading ? (
         <div className='flex flex-col gap-2'>
@@ -40,11 +53,11 @@ export default function HomePage() {
             />
           ))}
         </div>
-      ) : threads.length === 0 ? (
+      ) : filteredThread.length === 0 ? (
         <div className='text-center text-zinc-500 py-16'>Tidak ada thread.</div>
       ) : (
         <div className='flex flex-col gap-2'>
-          {threads.map((thread) => (
+          {filteredThread.map((thread) => (
             <Link
               key={thread.id}
               to={`/threads/${thread.id}`}

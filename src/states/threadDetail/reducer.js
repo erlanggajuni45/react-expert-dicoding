@@ -24,6 +24,24 @@ const threadDetailReducer = (threadDetail = null, action = {}) => {
         downVotesBy: voteType === -1 ? [...filteredDownVotes, userId] : filteredDownVotes,
       };
     },
+    [ActionType.APPLY_VOTE_COMMENT]: () => {
+      const { userId, commentId, voteType } = payload.vote;
+
+      return threadDetail.comments.map((comment) => {
+        if (comment.id === commentId) {
+          const filteredUpVotes = comment.upVotesBy.filter((id) => id !== userId);
+          const filteredDownVotes = comment.downVotesBy.filter((id) => id !== userId);
+
+          return {
+            ...comment,
+            upVotesBy: voteType === 1 ? [...filteredUpVotes, userId] : filteredUpVotes,
+            downVotesBy: voteType === -1 ? [...filteredDownVotes, userId] : filteredDownVotes,
+          };
+        }
+        return comment;
+      });
+    },
+
     DEFAULT: () => threadDetail,
   };
 

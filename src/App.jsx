@@ -53,6 +53,10 @@ function App() {
               path='/leaderboard'
               element={<LeaderboardsPage />}
             />
+            <Route
+              path='*'
+              element={<HomePage />}
+            />
           </Routes>
         </>
       )}

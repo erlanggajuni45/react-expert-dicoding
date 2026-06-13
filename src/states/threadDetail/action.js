@@ -11,9 +11,9 @@ const receiveThreadDetailActionCreator = (threadDetail) => ({
   payload: { threadDetail },
 });
 
-const addCommentThreadActionCreator = (thread) => ({
-  type: ActionType.RECEIVE_THREAD_DETAIL,
-  payload: { thread },
+const addCommentThreadActionCreator = (comment) => ({
+  type: ActionType.ADD_COMMENT_THREAD,
+  payload: { comment },
 });
 
 const asyncGetThreadDetail = (threadId) => {
@@ -28,12 +28,12 @@ const asyncGetThreadDetail = (threadId) => {
   };
 };
 
-const asyncAddCommentThread = ({ content }) => {
+const asyncAddCommentThread = ({ threadId, content }) => {
   return async (dispatch) => {
     dispatch(startLoadingActionCreator());
     try {
-      const thread = await api.createComment({ content });
-      dispatch(addCommentThreadActionCreator(thread));
+      const comment = await api.createComment({ threadId, content });
+      dispatch(addCommentThreadActionCreator(comment));
     } finally {
       dispatch(finishLoadingActionCreator());
     }

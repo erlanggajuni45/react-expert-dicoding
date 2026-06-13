@@ -10,6 +10,7 @@ import { asyncPreloadProcess } from './states/isPreload/action';
 import HomePage from './pages/HomePage';
 import AddThreadPage from './pages/AddThreadPage';
 import DetailThreadPage from './pages/DetailThreadPage';
+import LeaderboardsPage from './pages/LeaderboardsPage';
 
 function App() {
   const isPreload = useSelector((state) => state.isPreload);
@@ -50,6 +51,10 @@ function App() {
         <Route
           path='/threads/:threadId'
           element={<DetailThreadPage />}
+        />
+        <Route
+          path='/leaderboards'
+          element={<LeaderboardsPage />}
         />
       </Routes>
       <Toaster

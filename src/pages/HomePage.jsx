@@ -4,6 +4,7 @@ import { asyncGetThreads } from '../states/threads/action';
 import { asyncGetAllUsers } from '../states/users/action';
 import Skeleton from 'react-loading-skeleton';
 import ThreadCard from '../components/ThreadCard';
+import { Link } from 'react-router';
 
 export default function HomePage() {
   const isLoading = useSelector((state) => state.ui.loadingCount > 0);
@@ -44,11 +45,15 @@ export default function HomePage() {
       ) : (
         <div className='flex flex-col gap-2'>
           {threads.map((thread) => (
-            <ThreadCard
+            <Link
               key={thread.id}
-              owner={userMap[thread.ownerId]}
-              thread={thread}
-            />
+              to={`/threads/${thread.id}`}
+            >
+              <ThreadCard
+                owner={userMap[thread.ownerId]}
+                thread={thread}
+              />
+            </Link>
           ))}
         </div>
       )}

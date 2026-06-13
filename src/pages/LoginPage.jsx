@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router';
 import useInput from '../hooks/useInput';
 import { useDispatch, useSelector } from 'react-redux';
 import { asyncSetAuthUser } from '../states/authUser/action';
+import { toast } from 'sonner';
 
 export default function LoginPage() {
   const isLoading = useSelector((state) => state.ui.loadingCount > 0);
@@ -21,25 +22,10 @@ export default function LoginPage() {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    // if (!email) {
-    //   alert('Email tidak boleh kosong!');
-    //   return;
-    // }
-
-    // if (!password) {
-    //   alert('Password tidak boleh kosong!');
-    //   return;
-    // }
-
-    // if (password.length < 6) {
-    //   alert('Password minimal memiliki 6 karakter!');
-    //   return;
-    // }
-
     try {
       await dispatch(asyncSetAuthUser({ email, password }));
     } catch (err) {
-      alert(err.message);
+      toast.error(err.message);
     }
   };
 

@@ -3,6 +3,7 @@ import { CirclePlus, LogIn, LogOut, MessageSquare, Trophy } from 'lucide-react';
 import { Link } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { asyncUnsetAuthUser } from '../states/authUser/action';
+import { toast } from 'sonner';
 
 export default function Navbar() {
   const authUser = useSelector((state) => state.authUser);
@@ -10,7 +11,7 @@ export default function Navbar() {
   const dispatch = useDispatch();
 
   const onLogout = () => {
-    alert('Berhasil logout!');
+    toast.success('Berhasil logout!');
     dispatch(asyncUnsetAuthUser());
   };
 

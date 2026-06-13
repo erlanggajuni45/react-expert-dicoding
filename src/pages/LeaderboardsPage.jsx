@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { asyncGetLeaderboards } from '../states/leaderboard/action';
 import Skeleton from 'react-loading-skeleton';
 import { Trophy } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function LeaderboardsPage() {
   const leaderboards = useSelector((state) => state.leaderboards);
@@ -15,7 +16,7 @@ export default function LeaderboardsPage() {
       try {
         dispatch(asyncGetLeaderboards());
       } catch (err) {
-        alert(err.message);
+        toast.error(err.message);
       }
     })();
   }, [dispatch]);

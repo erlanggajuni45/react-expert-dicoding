@@ -4,6 +4,7 @@ import useInput from '../hooks/useInput';
 import { useDispatch, useSelector } from 'react-redux';
 import { asyncRegisterUser } from '../states/users/action';
 import { useNavigate } from 'react-router';
+import { toast } from 'sonner';
 
 export default function RegisterPage() {
   const isLoading = useSelector((state) => state.ui.loadingCount > 0);
@@ -27,10 +28,10 @@ export default function RegisterPage() {
 
     try {
       await dispatch(asyncRegisterUser({ name, email, password }));
-      alert('Registrasi berhasil');
+      toast.success('Registrasi berhasil');
       navigate('/login');
     } catch (err) {
-      alert(err.message);
+      toast.error(err.message);
     }
   };
 

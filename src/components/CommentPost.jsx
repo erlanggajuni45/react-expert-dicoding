@@ -6,6 +6,7 @@ import { Link } from 'react-router';
 import useInput from '../hooks/useInput';
 import { asyncAddCommentThread } from '../states/threadDetail/action';
 import { CommentPostSchema } from '../schemas';
+import { toast } from 'sonner';
 
 export default function CommentPost({ threadId, commentCount }) {
   const result = CommentPostSchema.safeParse({ threadId, commentCount });
@@ -21,10 +22,10 @@ export default function CommentPost({ threadId, commentCount }) {
   const addComment = async () => {
     try {
       await dispatch(asyncAddCommentThread({ threadId, content }));
-      alert('Berhasil menambahkan komentar!');
+      toast.success('Berhasil menambahkan komentar!');
       setContent('');
     } catch (err) {
-      alert(err.message);
+      toast.error(err.message);
     }
   };
 

@@ -7,6 +7,7 @@ import { formatDistanceToNow } from 'date-fns';
 import CommentCard from '../components/CommentCard';
 import CommentPost from '../components/CommentPost';
 import VoteButtons from '../components/VoteButtons';
+import { toast } from 'sonner';
 
 export default function DetailThreadPage() {
   const threadDetail = useSelector((state) => state.threadDetail);
@@ -22,7 +23,7 @@ export default function DetailThreadPage() {
       try {
         await dispatch(asyncGetThreadDetail(threadId));
       } catch (err) {
-        alert(err.message);
+        toast.error(err.message);
         navigate('/');
       }
     })();
@@ -38,7 +39,7 @@ export default function DetailThreadPage() {
 
   const handleVote = async (type) => {
     if (!authUser) {
-      alert('Anda harus login terlebih dahulu!');
+      toast.warning('Anda harus login terlebih dahulu!');
       navigate('/login');
       return;
     }
@@ -53,7 +54,7 @@ export default function DetailThreadPage() {
     try {
       await dispatch(asyncApplyVoteThreadDetail({ threadId, voteType }));
     } catch (err) {
-      alert(err.message);
+      toast.error(err.message);
     }
   };
 

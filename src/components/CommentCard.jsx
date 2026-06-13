@@ -7,6 +7,7 @@ import VoteButtons from './VoteButtons';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { asyncApplyVoteComment } from '../states/threadDetail/action';
+import { toast } from 'sonner';
 
 export default function CommentCard({ comment, threadId }) {
   const authUser = useSelector((state) => state.authUser);
@@ -25,7 +26,7 @@ export default function CommentCard({ comment, threadId }) {
 
   const handleVote = async (type) => {
     if (!authUser) {
-      alert('Anda harus login terlebih dahulu!');
+      toast.warning('Anda harus login terlebih dahulu!');
       navigate('/login');
       return;
     }
@@ -40,7 +41,7 @@ export default function CommentCard({ comment, threadId }) {
     try {
       await dispatch(asyncApplyVoteComment({ threadId, commentId, voteType }));
     } catch (err) {
-      alert(err.message);
+      toast.error(err.message);
     }
   };
 

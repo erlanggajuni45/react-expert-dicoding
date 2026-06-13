@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { asyncPreloadProcess } from './states/isPreload/action';
 import HomePage from './pages/HomePage';
 import AddThreadPage from './pages/AddThreadPage';
+import DetailThreadPage from './pages/DetailThreadPage';
 
 function App() {
   const isPreload = useSelector((state) => state.isPreload);
@@ -45,6 +46,10 @@ function App() {
         <Route
           path='/threads/new'
           element={<AddThreadPage />}
+        />
+        <Route
+          path='/threads/:threadId'
+          element={<DetailThreadPage />}
         />
       </Routes>
       <Toaster

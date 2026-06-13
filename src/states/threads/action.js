@@ -4,11 +4,17 @@ import { finishLoadingActionCreator, startLoadingActionCreator } from '../ui/act
 const ActionType = {
   RECEIVE_THREADS: 'RECEIVE_THREADS',
   ADD_THREAD: 'ADD_THREAD',
+  APPLY_VOTE_THREAD: 'APPLY_VOTE_THREAD',
 };
 
 const receiveThreadsActionCreator = (threads) => ({
   type: ActionType.RECEIVE_THREADS,
   payload: { threads },
+});
+
+const applyVoteThreadActionCreator = (vote) => ({
+  type: ActionType.APPLY_VOTE_THREAD,
+  payload: { vote },
 });
 
 const addThreadActionCreator = (thread) => ({ type: ActionType.ADD_THREAD, payload: { thread } });
@@ -40,10 +46,31 @@ const asyncAddThread = ({ title, body, category }) => {
   };
 };
 
+const asyncApplyVoteThread = ({ threadId, voteType }) => {
+  return async (dispatch) => {
+    dispatch(startLoadingActionCreator());
+    try {
+      const voteAction = {
+        up: () => api.upvoteThread(threadId),
+        down: () => api.downvoteThread(threadId),
+        neutral: () => api.neutralizeThreadVote(threadId),
+      }[voteType];
+
+      if (!voteAction) throw new Error('Tipe vote tidak didukung');
+
+      const vote = await voteAction();
+      dispatch(applyVoteThreadActionCreator(vote));
+    } finally {
+      dispatch(finishLoadingActionCreator());
+    }
+  };
+};
+
 export {
   ActionType,
   receiveThreadsActionCreator,
   addThreadActionCreator,
   asyncAddThread,
   asyncGetThreads,
+  asyncApplyVoteThread,
 };

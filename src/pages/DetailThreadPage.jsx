@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate, useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { asyncGetThreadDetail } from '../states/threadDetail/action';
 import Skeleton from 'react-loading-skeleton';
 import { formatDistanceToNow } from 'date-fns';
@@ -9,7 +9,6 @@ import CommentPost from '../components/CommentPost';
 
 export default function DetailThreadPage() {
   const threadDetail = useSelector((state) => state.threadDetail);
-  const authUser = useSelector((state) => state.authUser);
 
   const { threadId } = useParams();
 
@@ -54,22 +53,10 @@ export default function DetailThreadPage() {
         </div>
         <div dangerouslySetInnerHTML={{ __html: body }} />
       </div>
-      {authUser ? (
-        <CommentPost
-          commentCount={comments.length}
-          threadId={threadId}
-        />
-      ) : (
-        <div className='border border-gray-200 mb-6 flex justify-center mx-auto gap-4 py-8 rounded-xl'>
-          <Link
-            to='/login'
-            className='underline font-semibold'
-          >
-            Login
-          </Link>{' '}
-          <span className='text-zinc-500'>untuk berkomentar</span>
-        </div>
-      )}
+      <CommentPost
+        commentCount={comments.length}
+        threadId={threadId}
+      />
       <div className='flex flex-col gap-3'>
         {comments.map((comment) => (
           <CommentCard

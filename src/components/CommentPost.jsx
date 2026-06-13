@@ -1,6 +1,8 @@
 /* eslint-disable react/prop-types */
 
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router';
 import z from 'zod';
 
 const CommentPostSchema = z.object({
@@ -13,7 +15,11 @@ export default function CommentPost({ threadId, commentCount }) {
 
   if (!result.success) return <h1>Invalid Payload</h1>;
 
-  return (
+  const authUser = useSelector((state) => state.authUser);
+
+  const dispatch = useDispatch();
+
+  return authUser ? (
     <div className='flex flex-col gap-3 mb-6'>
       <h1>Komentar ({commentCount})</h1>
       <textarea
@@ -26,6 +32,16 @@ export default function CommentPost({ threadId, commentCount }) {
       >
         Kirim Komentar
       </button>
+    </div>
+  ) : (
+    <div className='border border-gray-200 mb-6 flex justify-center mx-auto gap-4 py-8 rounded-xl'>
+      <Link
+        to='/login'
+        className='underline font-semibold'
+      >
+        Login
+      </Link>{' '}
+      <span className='text-zinc-500'>untuk berkomentar</span>
     </div>
   );
 }

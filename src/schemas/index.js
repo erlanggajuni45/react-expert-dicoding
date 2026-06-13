@@ -31,12 +31,15 @@ const CategoryFilterSchema = z.object({
 });
 
 const CommentSchema = z.object({
-  id: z.string(),
-  createdAt: z.string(),
-  content: z.string(),
-  owner: OwnerSchema,
-  upVotesBy: z.array(z.string()),
-  downVotesBy: z.array(z.string()),
+  threadId: z.string(),
+  comment: z.object({
+    id: z.string(),
+    createdAt: z.string(),
+    content: z.string(),
+    owner: OwnerSchema,
+    upVotesBy: z.array(z.string()),
+    downVotesBy: z.array(z.string()),
+  }),
 });
 
 const CommentPostSchema = z.object({

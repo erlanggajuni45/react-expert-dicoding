@@ -5,6 +5,7 @@ const threadDetailReducer = (threadDetail = null, action = {}) => {
 
   const actions = {
     [ActionType.RECEIVE_THREAD_DETAIL]: () => payload.threadDetail,
+    [ActionType.ADD_COMMENT_THREAD]: () => [payload.thread, ...threadDetail],
     DEFAULT: () => threadDetail,
   };
 

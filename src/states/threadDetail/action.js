@@ -53,8 +53,17 @@ const asyncAddCommentThread = ({ threadId, content }) => {
 };
 
 const asyncApplyVoteThreadDetail = ({ threadId, voteType }) => {
-  return async (dispatch) => {
-    dispatch(startLoadingActionCreator());
+  return async (dispatch, getState) => {
+    const { authUser } = getState();
+
+    dispatch(
+      applyVoteThreadDetailActionCreator({
+        userId: authUser.id,
+        threadId,
+        voteType: voteType === 'up' ? 1 : voteType === 'down' ? -1 : 0,
+      }),
+    );
+
     try {
       const voteAction = {
         up: () => api.upvoteThread(threadId),
@@ -64,17 +73,32 @@ const asyncApplyVoteThreadDetail = ({ threadId, voteType }) => {
 
       if (!voteAction) throw new Error('Tipe vote tidak didukung');
 
-      const vote = await voteAction();
-      dispatch(applyVoteThreadDetailActionCreator(vote));
-    } finally {
-      dispatch(finishLoadingActionCreator());
+      await voteAction();
+    } catch (e) {
+      dispatch(
+        applyVoteThreadDetailActionCreator({
+          userId: authUser.id,
+          threadId,
+          voteType: 0,
+        }),
+      );
+      throw e;
     }
   };
 };
 
 const asyncApplyVoteComment = ({ threadId, commentId, voteType }) => {
-  return async (dispatch) => {
-    dispatch(startLoadingActionCreator());
+  return async (dispatch, getState) => {
+    const { authUser } = getState();
+
+    dispatch(
+      applyVoteCommentActionCreator({
+        userId: authUser.id,
+        commentId,
+        voteType: voteType === 'up' ? 1 : voteType === 'down' ? -1 : 0,
+      }),
+    );
+
     try {
       const voteAction = {
         up: () => api.upvoteComment({ threadId, commentId }),
@@ -84,10 +108,16 @@ const asyncApplyVoteComment = ({ threadId, commentId, voteType }) => {
 
       if (!voteAction) throw new Error('Tipe vote tidak didukung');
 
-      const vote = await voteAction();
-      dispatch(applyVoteCommentActionCreator(vote));
-    } finally {
-      dispatch(finishLoadingActionCreator());
+      await voteAction();
+    } catch (e) {
+      dispatch(
+        applyVoteCommentActionCreator({
+          userId: authUser.id,
+          commentId,
+          voteType: 0,
+        }),
+      );
+      throw e;
     }
   };
 };

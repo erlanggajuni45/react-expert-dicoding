@@ -47,8 +47,17 @@ const asyncAddThread = ({ title, body, category }) => {
 };
 
 const asyncApplyVoteThread = ({ threadId, voteType }) => {
-  return async (dispatch) => {
-    dispatch(startLoadingActionCreator());
+  return async (dispatch, getState) => {
+    const { authUser } = getState();
+
+    dispatch(
+      applyVoteThreadActionCreator({
+        userId: authUser.id,
+        threadId,
+        voteType: voteType === 'up' ? 1 : voteType === 'down' ? -1 : 0,
+      }),
+    );
+
     try {
       const voteAction = {
         up: () => api.upvoteThread(threadId),
@@ -58,10 +67,16 @@ const asyncApplyVoteThread = ({ threadId, voteType }) => {
 
       if (!voteAction) throw new Error('Tipe vote tidak didukung');
 
-      const vote = await voteAction();
-      dispatch(applyVoteThreadActionCreator(vote));
-    } finally {
-      dispatch(finishLoadingActionCreator());
+      await voteAction();
+    } catch (e) {
+      dispatch(
+        applyVoteThreadActionCreator({
+          userId: authUser.id,
+          threadId,
+          voteType: 0,
+        }),
+      );
+      throw e;
     }
   };
 };

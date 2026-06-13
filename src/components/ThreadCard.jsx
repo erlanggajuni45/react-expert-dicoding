@@ -4,15 +4,44 @@ import { formatDistanceToNow } from 'date-fns';
 import { MessageCircle } from 'lucide-react';
 import React from 'react';
 import { ThreadCardSchema } from '../schemas';
-import UpDownVote from './VoteButtons';
 import VoteButtons from './VoteButtons';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
+import { asyncApplyVoteThread } from '../states/threads/action';
 
 export default function ThreadCard({ thread, owner }) {
   const result = ThreadCardSchema.safeParse({ thread, owner });
-
   if (!result.success) {
     return <h1>Invalid Props</h1>;
   }
+
+  const authUser = useSelector((state) => state.authUser);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const upActive = !!authUser && thread.upVotesBy.includes(authUser.id);
+  const downActive = !!authUser && thread.downVotesBy.includes(authUser.id);
+
+  const handleVote = async (type) => {
+    if (!authUser) {
+      alert('Anda harus login terlebih dahulu!');
+      navigate('/login');
+      return;
+    }
+
+    let voteType = type;
+    if (type === 'up' && upActive) {
+      voteType = 'neutral';
+    } else if (type === 'down' && downActive) {
+      voteType = 'neutral';
+    }
+
+    try {
+      await dispatch(asyncApplyVoteThread({ threadId: thread.id, voteType }));
+    } catch (err) {
+      alert(err.message);
+    }
+  };
 
   return (
     <div className='bg-white rounded-xl p-4 my-1 shadow-sm'>
@@ -39,8 +68,15 @@ export default function ThreadCard({ thread, owner }) {
           dangerouslySetInnerHTML={{ __html: thread.body }}
         />
       </div>
-      <div className='mt-3 flex pr-2'>
-        <VoteButtons thread={thread} />
+      <div className='mt-3 flex pr-2 items-center justify-between'>
+        <VoteButtons
+          upCount={thread.upVotesBy.length}
+          downCount={thread.downVotesBy.length}
+          upActive={upActive}
+          downActive={downActive}
+          onUp={() => handleVote('up')}
+          onDown={() => handleVote('down')}
+        />
         <span className='ml-auto flex items-center gap-2'>
           <MessageCircle className='h-4 w-4' />
           {thread.totalComments}

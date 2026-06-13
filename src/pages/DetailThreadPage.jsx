@@ -46,8 +46,7 @@ export default function DetailThreadPage() {
     let voteType = type;
     if (type === 'up' && upActive) {
       voteType = 'neutral';
-    }
-    if (type === 'down' && downActive) {
+    } else if (type === 'down' && downActive) {
       voteType = 'neutral';
     }
 
@@ -97,6 +96,7 @@ export default function DetailThreadPage() {
           <CommentCard
             key={comment.id}
             comment={comment}
+            threadId={threadId}
           />
         ))}
       </div>

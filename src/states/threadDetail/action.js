@@ -4,6 +4,7 @@ import { finishLoadingActionCreator, startLoadingActionCreator } from '../ui/act
 const ActionType = {
   RECEIVE_THREAD_DETAIL: 'RECEIVE_THREAD_DETAIL',
   ADD_COMMENT_THREAD: 'ADD_COMMENT_THREAD',
+  APPLY_VOTE_THREAD_DETAIL: 'APPLY_VOTE_THREAD_DETAIL',
 };
 
 const receiveThreadDetailActionCreator = (threadDetail) => ({
@@ -14,6 +15,11 @@ const receiveThreadDetailActionCreator = (threadDetail) => ({
 const addCommentThreadActionCreator = (comment) => ({
   type: ActionType.ADD_COMMENT_THREAD,
   payload: { comment },
+});
+
+const applyVoteThreadDetailActionCreator = (vote) => ({
+  type: ActionType.APPLY_VOTE_THREAD_DETAIL,
+  payload: { vote },
 });
 
 const asyncGetThreadDetail = (threadId) => {
@@ -40,9 +46,31 @@ const asyncAddCommentThread = ({ threadId, content }) => {
   };
 };
 
+const asyncApplyVoteThreadDetail = ({ threadId, voteType }) => {
+  return async (dispatch) => {
+    dispatch(startLoadingActionCreator());
+    try {
+      const voteAction = {
+        up: () => api.upvoteThread(threadId),
+        down: () => api.downvoteThread(threadId),
+        neutral: () => api.neutralizeThreadVote(threadId),
+      }[voteType];
+
+      if (!voteAction) throw new Error('Tipe vote tidak didukung');
+
+      const vote = await voteAction();
+      dispatch(applyVoteThreadDetailActionCreator(vote));
+    } finally {
+      dispatch(finishLoadingActionCreator());
+    }
+  };
+};
+
 export {
   ActionType,
   receiveThreadDetailActionCreator,
   asyncGetThreadDetail,
   asyncAddCommentThread,
+  applyVoteThreadDetailActionCreator,
+  asyncApplyVoteThreadDetail,
 };

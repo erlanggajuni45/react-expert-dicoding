@@ -5,17 +5,20 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import { Toaster } from 'sonner';
 import LoadingBar from './components/LoadingBar';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { asyncPreloadProcess } from './states/isPreload/action';
 import HomePage from './pages/HomePage';
 import AddThreadPage from './pages/AddThreadPage';
 
 function App() {
+  const isPreload = useSelector((state) => state.isPreload);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(asyncPreloadProcess());
   }, [dispatch]);
+
+  if (isPreload) return null;
 
   return (
     <div className='bg-zinc-50 text-zinc-900 min-h-screen'>

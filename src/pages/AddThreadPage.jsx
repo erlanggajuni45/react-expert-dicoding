@@ -1,5 +1,28 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router';
+
 export default function AddThreadPage() {
+  const authUser = useSelector((state) => state.authUser);
+  const isPreload = useSelector((state) => state.isPreload);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isPreload && !authUser) {
+      alert('Anda harus login untuk membuat thread baru!');
+      navigate('/login');
+    }
+  }, [isPreload, authUser, navigate]);
+
+  if (isPreload) {
+    return null;
+  }
+
+  if (!authUser) {
+    return null;
+  }
+
   return (
     <div className='max-w-3xl mx-auto px-4 py-8'>
       <div className='mb-6'>
@@ -32,12 +55,14 @@ export default function AddThreadPage() {
           ></textarea>
         </div>
         <div className='flex justify-end gap-4'>
-          <button
-            type='button'
-            className='cursor-pointer p-2'
-          >
-            Batal
-          </button>
+          <Link to='/'>
+            <button
+              type='button'
+              className='cursor-pointer p-2'
+            >
+              Batal
+            </button>
+          </Link>
           <button className='cursor-pointer px-4 bg-black text-white rounded-md'>Post</button>
         </div>
       </form>

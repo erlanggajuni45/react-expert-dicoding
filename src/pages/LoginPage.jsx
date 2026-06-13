@@ -71,7 +71,7 @@ export default function LoginPage() {
           />
           <button
             type='submit'
-            className='cursor-pointer bg-black text-white py-2 px-4 mt-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500'
+            className='cursor-pointer bg-black text-white py-2 px-4 mt-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-500'
             disabled={isLoading}
           >
             Masuk

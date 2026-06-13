@@ -34,9 +34,6 @@ const asyncAddThread = ({ title, body, category }) => {
     try {
       const thread = await api.createThread({ title, body, category });
       dispatch(addThreadActionCreator(thread));
-    } catch (err) {
-      alert(err.message);
-      throw err;
     } finally {
       dispatch(finishLoadingActionCreator());
     }

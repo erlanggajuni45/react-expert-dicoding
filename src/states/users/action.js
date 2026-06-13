@@ -16,8 +16,6 @@ const asyncRegisterUser = ({ name, email, password }) => {
 
     try {
       await api.register({ name, email, password });
-    } catch (err) {
-      alert(err.message);
     } finally {
       dispatch(finishLoadingActionCreator());
     }

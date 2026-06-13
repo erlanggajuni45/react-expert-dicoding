@@ -25,30 +25,12 @@ export default function RegisterPage() {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    if (!name) {
-      alert('Nama tidak boleh kosong!');
-      return;
-    }
-    if (!email) {
-      alert('Email tidak boleh kosong!');
-      return;
-    }
-    if (!password) {
-      alert('Password tidak boleh kosong!');
-      return;
-    }
-
-    if (password.length < 6) {
-      alert('Password minimal memiliki 6 karakter!');
-      return;
-    }
-
     try {
       await dispatch(asyncRegisterUser({ name, email, password }));
       alert('Registrasi berhasil');
       navigate('/login');
     } catch (err) {
-      console.error(err);
+      alert(err.message);
     }
   };
 

@@ -21,25 +21,25 @@ export default function LoginPage() {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    if (!email) {
-      alert('Email tidak boleh kosong!');
-      return;
-    }
+    // if (!email) {
+    //   alert('Email tidak boleh kosong!');
+    //   return;
+    // }
 
-    if (!password) {
-      alert('Password tidak boleh kosong!');
-      return;
-    }
+    // if (!password) {
+    //   alert('Password tidak boleh kosong!');
+    //   return;
+    // }
 
-    if (password.length < 6) {
-      alert('Password minimal memiliki 6 karakter!');
-      return;
-    }
+    // if (password.length < 6) {
+    //   alert('Password minimal memiliki 6 karakter!');
+    //   return;
+    // }
 
     try {
       await dispatch(asyncSetAuthUser({ email, password }));
     } catch (err) {
-      console.error(err.message);
+      alert(err.message);
     }
   };
 

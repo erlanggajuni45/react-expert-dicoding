@@ -10,6 +10,7 @@ export default function Navbar() {
   const dispatch = useDispatch();
 
   const onLogout = () => {
+    alert('Berhasil logout!');
     dispatch(asyncUnsetAuthUser());
   };
 

@@ -1,28 +1,30 @@
-/* eslint-disable react/prop-types */
-
 import { formatDistanceToNow } from 'date-fns';
 import { MessageCircle } from 'lucide-react';
 import React from 'react';
 import z from 'zod';
 
+const ThreadSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  body: z.string(),
+  category: z.string(),
+  createdAt: z.string(),
+  ownerId: z.string(),
+  totalComments: z.number(),
+  upVotesBy: z.array(z.string()),
+  downVotesBy: z.array(z.string()),
+});
+
+const OwnerSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  email: z.string(),
+  avatar: z.string(),
+});
+
 const ThreadCardSchema = z.object({
-  thread: z.object({
-    id: z.string(),
-    title: z.string(),
-    body: z.string(),
-    category: z.string(),
-    createdAt: z.string(),
-    ownerId: z.string(),
-    totalComments: z.number(),
-    upVotesBy: z.array(z.string()),
-    downVotesBy: z.array(z.string()),
-  }),
-  owner: z.object({
-    id: z.string(),
-    name: z.string(),
-    email: z.string(),
-    avatar: z.string(),
-  }),
+  thread: ThreadSchema,
+  owner: OwnerSchema,
 });
 
 export default function ThreadCard({ thread, owner }) {
@@ -66,3 +68,8 @@ export default function ThreadCard({ thread, owner }) {
     </div>
   );
 }
+
+ThreadCard.propTypes = {
+  thread: ThreadSchema,
+  owner: OwnerSchema,
+};

@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router';
 import { asyncGetThreadDetail } from '../states/threadDetail/action';
 import Skeleton from 'react-loading-skeleton';
 import { formatDistanceToNow } from 'date-fns';
+import CommentCard from '../components/CommentCard';
 
 export default function DetailThreadPage() {
   const threadDetail = useSelector((state) => state.threadDetail);
@@ -63,6 +64,14 @@ export default function DetailThreadPage() {
         >
           Kirim Komentar
         </button>
+      </div>
+      <div className='flex flex-col gap-3'>
+        {comments.map((comment) => (
+          <CommentCard
+            key={comment.id}
+            comment={comment}
+          />
+        ))}
       </div>
     </div>
   );

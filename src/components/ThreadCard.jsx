@@ -3,31 +3,9 @@
 import { formatDistanceToNow } from 'date-fns';
 import { MessageCircle } from 'lucide-react';
 import React from 'react';
-import z from 'zod';
-
-const ThreadSchema = z.object({
-  id: z.string(),
-  title: z.string(),
-  body: z.string(),
-  category: z.string(),
-  createdAt: z.string(),
-  ownerId: z.string(),
-  totalComments: z.number(),
-  upVotesBy: z.array(z.string()),
-  downVotesBy: z.array(z.string()),
-});
-
-const OwnerSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  email: z.string(),
-  avatar: z.string(),
-});
-
-const ThreadCardSchema = z.object({
-  thread: ThreadSchema,
-  owner: OwnerSchema,
-});
+import { ThreadCardSchema } from '../schemas';
+import UpDownVote from './VoteButtons';
+import VoteButtons from './VoteButtons';
 
 export default function ThreadCard({ thread, owner }) {
   const result = ThreadCardSchema.safeParse({ thread, owner });
@@ -62,6 +40,7 @@ export default function ThreadCard({ thread, owner }) {
         />
       </div>
       <div className='mt-3 flex pr-2'>
+        <VoteButtons thread={thread} />
         <span className='ml-auto flex items-center gap-2'>
           <MessageCircle className='h-4 w-4' />
           {thread.totalComments}

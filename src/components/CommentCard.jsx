@@ -2,23 +2,10 @@
 
 import { formatDistanceToNow } from 'date-fns';
 import React from 'react';
-import z from 'zod';
-
-const CommentCardSchema = z.object({
-  id: z.string(),
-  createdAt: z.string(),
-  content: z.string(),
-  owner: z.object({
-    id: z.string(),
-    name: z.string(),
-    avatar: z.string(),
-  }),
-  upVotesBy: z.array(z.string()),
-  downVotesBy: z.array(z.string()),
-});
+import { CommentSchema } from '../schemas';
 
 export default function CommentCard({ comment }) {
-  const result = CommentCardSchema.safeParse(comment);
+  const result = CommentSchema.safeParse(comment);
 
   if (!result.success) return <h1>Invalid Payload</h1>;
 

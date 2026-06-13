@@ -1,12 +1,6 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
-import z from 'zod';
-
-const CategoryFilterSchema = z.object({
-  categories: z.array(z.string()),
-  selected: z.string().nullable(),
-  onSelected: z.function(),
-});
+import { CategoryFilterSchema } from '../schemas';
 
 export default function CategoryFilter({ categories, selected, onSelected }) {
   const result = CategoryFilterSchema.safeParse({ categories, selected, onSelected });

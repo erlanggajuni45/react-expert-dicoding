@@ -3,14 +3,9 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router';
-import z from 'zod';
 import useInput from '../hooks/useInput';
 import { asyncAddCommentThread } from '../states/threadDetail/action';
-
-const CommentPostSchema = z.object({
-  threadId: z.string(),
-  commentCount: z.number(),
-});
+import { CommentPostSchema } from '../schemas';
 
 export default function CommentPost({ threadId, commentCount }) {
   const result = CommentPostSchema.safeParse({ threadId, commentCount });

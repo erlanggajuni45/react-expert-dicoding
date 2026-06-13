@@ -8,6 +8,7 @@ const api = (() => {
       ...options,
       headers: {
         ...options.headers,
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${getAccessToken()}`,
       },
     });
@@ -24,9 +25,6 @@ const api = (() => {
   async function register({ name, email, password }) {
     const response = await fetch(`${BASE_URL}/register`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
       body: JSON.stringify({ name, email, password }),
     });
 
@@ -43,9 +41,6 @@ const api = (() => {
   async function login({ email, password }) {
     const response = await fetch(`${BASE_URL}/login`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
       body: JSON.stringify({ email, password }),
     });
 
@@ -138,7 +133,6 @@ const api = (() => {
   async function createComment({ threadId, content }) {
     const response = await authedRequest(`${BASE_URL}/threads/${threadId}/comments`, {
       method: 'POST',
-
       body: JSON.stringify({ content }),
     });
 

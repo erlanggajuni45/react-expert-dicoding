@@ -5,6 +5,7 @@ import { asyncGetThreadDetail } from '../states/threadDetail/action';
 import Skeleton from 'react-loading-skeleton';
 import { formatDistanceToNow } from 'date-fns';
 import CommentCard from '../components/CommentCard';
+import CommentPost from '../components/CommentPost';
 
 export default function DetailThreadPage() {
   const threadDetail = useSelector((state) => state.threadDetail);
@@ -52,19 +53,10 @@ export default function DetailThreadPage() {
         </div>
         <div dangerouslySetInnerHTML={{ __html: body }} />
       </div>
-      <div className='flex flex-col gap-3 mb-6'>
-        <h1>Komentar ({comments.length})</h1>
-        <textarea
-          className='w-full resize-none border border-gray-300 bg-gray-100 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500'
-          placeholder='Tulis komentarmu...'
-        ></textarea>
-        <button
-          type='button'
-          className='bg-black text-white rounded-md px-3 py-1 mr-auto'
-        >
-          Kirim Komentar
-        </button>
-      </div>
+      <CommentPost
+        commentCount={comments.length}
+        threadId={threadId}
+      />
       <div className='flex flex-col gap-3'>
         {comments.map((comment) => (
           <CommentCard

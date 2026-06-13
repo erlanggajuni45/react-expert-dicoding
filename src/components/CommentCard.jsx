@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+
 import { formatDistanceToNow } from 'date-fns';
 import React from 'react';
 import z from 'zod';
@@ -38,7 +40,3 @@ export default function CommentCard({ comment }) {
     </div>
   );
 }
-
-CommentCard.propTypes = {
-  comment: CommentCardSchema,
-};

@@ -18,4 +18,9 @@ export default defineConfig([
   },
   pluginReact.configs.flat.recommended,
   daStyle,
+  {
+    rules: {
+      'react/prop-types': 'off',
+    },
+  },
 ]);

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router';
 import useInput from '../hooks/useInput';
 import { asyncAddThread } from '../states/threads/action';
+import { toast } from 'sonner';
 
 export default function AddThreadPage() {
   const authUser = useSelector((state) => state.authUser);
@@ -18,7 +19,7 @@ export default function AddThreadPage() {
 
   useEffect(() => {
     if (!isPreload && !authUser) {
-      alert('Anda harus login untuk membuat thread baru!');
+      toast.warning('Anda harus login untuk membuat thread baru!');
       navigate('/login');
     }
   }, [isPreload, authUser, navigate]);
@@ -28,10 +29,10 @@ export default function AddThreadPage() {
 
     try {
       await dispatch(asyncAddThread({ title, body, category }));
-      alert('Berhasil menambahkan thread!');
+      toast.success('Berhasil menambahkan thread!');
       navigate('/');
     } catch (e) {
-      alert(e.message);
+      toast.error(e.message);
     }
   };
 

@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React from 'react';
 import { VoteButtonSchema } from '../schemas';
 import { ArrowBigDown, ArrowBigUp } from 'lucide-react';

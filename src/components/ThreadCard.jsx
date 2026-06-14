@@ -1,5 +1,3 @@
-/* eslint-disable react/prop-types */
-
 import { formatDistanceToNow } from 'date-fns';
 import { MessageCircle } from 'lucide-react';
 import React from 'react';

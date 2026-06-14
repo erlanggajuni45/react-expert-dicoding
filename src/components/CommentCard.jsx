@@ -1,5 +1,3 @@
-/* eslint-disable react/prop-types */
-
 import { formatDistanceToNow } from 'date-fns';
 import React from 'react';
 import { CommentSchema } from '../schemas';

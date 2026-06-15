@@ -29,6 +29,7 @@
     "@types/react": "^19.1.15",
     "@types/react-dom": "^19.1.9",
     "@vitejs/plugin-react": "^5.0.4",
+    "cypress": "^15.17.0",
     "eslint": "^9.36.0",
     "eslint-config-dicodingacademy": "^0.9.5",
     "eslint-plugin-react": "^7.37.5",

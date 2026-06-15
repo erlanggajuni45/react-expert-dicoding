@@ -39,7 +39,9 @@ const api = (() => {
       throw new Error(message);
     }
 
-    const { data: { user } } = responseJson;
+    const {
+      data: { user },
+    } = responseJson;
 
     return user;
   }
@@ -64,7 +66,9 @@ const api = (() => {
       throw new Error(message);
     }
 
-    const { data: { token } } = responseJson;
+    const {
+      data: { token },
+    } = responseJson;
 
     return token;
   }
@@ -80,7 +84,9 @@ const api = (() => {
       throw new Error(message);
     }
 
-    const { data: { user } } = responseJson;
+    const {
+      data: { user },
+    } = responseJson;
 
     return user;
   }
@@ -96,7 +102,9 @@ const api = (() => {
       throw new Error(message);
     }
 
-    const { data: { users } } = responseJson;
+    const {
+      data: { users },
+    } = responseJson;
 
     return users;
   }
@@ -112,7 +120,9 @@ const api = (() => {
       throw new Error(message);
     }
 
-    const { data: { talks } } = responseJson;
+    const {
+      data: { talks },
+    } = responseJson;
 
     return talks;
   }
@@ -128,7 +138,9 @@ const api = (() => {
       throw new Error(message);
     }
 
-    const { data: { talkDetail } } = responseJson;
+    const {
+      data: { talkDetail },
+    } = responseJson;
 
     return talkDetail;
   }
@@ -153,7 +165,9 @@ const api = (() => {
       throw new Error(message);
     }
 
-    const { data: { talk } } = responseJson;
+    const {
+      data: { talk },
+    } = responseJson;
 
     return talk;
   }

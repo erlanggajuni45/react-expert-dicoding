@@ -4,15 +4,17 @@ import pluginJs from '@eslint/js';
 import pluginReact from 'eslint-plugin-react';
 import pluginHooks from 'eslint-plugin-react-hooks';
 import daStyle from 'eslint-config-dicodingacademy';
+import pluginCypress from 'eslint-plugin-cypress';
 
 export default [
   { files: ['**/*.{js,mjs,cjs,jsx}'] },
   { languageOptions: { globals: { ...globals.browser, ...globals.node } } },
   pluginJs.configs.recommended,
   pluginReact.configs.flat.recommended,
+  pluginCypress.configs.recommended,
   {
     plugins: {
-      'react-hooks': fixupPluginRules(pluginHooks)
+      'react-hooks': fixupPluginRules(pluginHooks),
     },
     rules: pluginHooks.configs.recommended.rules,
   },
@@ -25,7 +27,7 @@ export default [
       'import/prefer-default-export': 'off',
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
-      'react/jsx-props-no-spreading': 'off'
-    }
-  }
+      'react/jsx-props-no-spreading': 'off',
+    },
+  },
 ];

@@ -2,8 +2,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import api from '../../api';
 import {
   addCommentThreadActionCreator,
+  applyVoteCommentActionCreator,
   applyVoteThreadDetailActionCreator,
   asyncAddCommentThread,
+  asyncApplyVoteComment,
   asyncApplyVoteThreadDetail,
   asyncGetThreadDetail,
   receiveThreadDetailActionCreator,
@@ -71,6 +73,27 @@ const fakeNeutralizeVoteThreadResponse = {
   userId: 'users-1',
   threadId: 'thread-1',
   voteType: -1,
+};
+
+const fakeUpVoteCommentResponse = {
+  id: 'vote-1',
+  userId: 'users-1',
+  commentId: 'comment-1',
+  voteType: 1,
+};
+
+const fakeDownVoteCommentResponse = {
+  id: 'vote-1',
+  userId: 'users-1',
+  commentId: 'comment-1',
+  voteType: -1,
+};
+
+const fakeNeutralizeVoteCommentResponse = {
+  id: 'vote-1',
+  userId: 'users-1',
+  commentId: 'comment-1',
+  voteType: 0,
 };
 
 const fakeAuthUser = {
@@ -256,9 +279,6 @@ describe('asyncApplyVoteThreadDetail thunk', () => {
 
   it('should throw an error if invalid vote type is given and cancel the vote change', async () => {
     // arrange
-    api.upvoteThread = () => Promise.resolve(fakeUpVoteThreadResponse);
-    api.downvoteThread = () => Promise.resolve(fakeDownVoteThreadResponse);
-    api.neutralizeThreadVote = () => Promise.resolve(fakeNeutralizeVoteThreadResponse);
     const getState = () => ({ authUser: fakeAuthUser });
     const dispatch = vi.fn();
 
@@ -396,4 +416,229 @@ describe('asyncApplyVoteThreadDetail thunk', () => {
   });
 });
 
-// describe('asyncApplyVoteComment thunk', () => {});
+describe('asyncApplyVoteComment thunk', () => {
+  beforeEach(() => {
+    api._upvoteComment = api.upvoteComment;
+    api._downvoteComment = api.downvoteComment;
+    api._neutralizeCommentVote = api.neutralizeCommentVote;
+  });
+
+  afterEach(() => {
+    api.upvoteComment = api._upvoteComment;
+    api.downvoteComment = api._downvoteComment;
+    api.neutralizeCommentVote = api._neutralizeCommentVote;
+
+    delete api._upvoteComment;
+    delete api._downvoteComment;
+    delete api._neutralizeCommentVote;
+  });
+
+  it('should dispatch action correctly when up vote success', async () => {
+    // arrange
+    api.upvoteComment = () => Promise.resolve(fakeUpVoteCommentResponse);
+    const getState = () => ({ authUser: fakeAuthUser });
+    const dispatch = vi.fn();
+
+    // action: up vote thread
+    await asyncApplyVoteComment({ threadId: 'thread-1', commentId: 'comment-1', voteType: 'up' })(
+      dispatch,
+      getState,
+    );
+
+    // assert
+    expect(dispatch).toHaveBeenCalledWith(
+      applyVoteCommentActionCreator({
+        userId: fakeAuthUser.id,
+        commentId: 'comment-1',
+        voteType: 1,
+      }),
+    );
+  });
+
+  it('should dispatch action correctly when down vote success', async () => {
+    // arrange
+    api.downvoteComment = () => Promise.resolve(fakeDownVoteCommentResponse);
+    const getState = () => ({ authUser: fakeAuthUser });
+    const dispatch = vi.fn();
+
+    // action: down vote thread
+    await asyncApplyVoteComment({ threadId: 'thread-1', commentId: 'comment-1', voteType: 'down' })(
+      dispatch,
+      getState,
+    );
+
+    // assert
+    expect(dispatch).toHaveBeenCalledWith(
+      applyVoteCommentActionCreator({
+        userId: fakeAuthUser.id,
+        commentId: 'comment-1',
+        voteType: -1,
+      }),
+    );
+  });
+
+  it('should dispatch action correctly when neutralize vote success', async () => {
+    // arrange
+    api.neutralizeCommentVote = () => Promise.resolve(fakeNeutralizeVoteCommentResponse);
+    const getState = () => ({ authUser: fakeAuthUser });
+    const dispatch = vi.fn();
+
+    // action: neutralize vote thread
+    await asyncApplyVoteComment({
+      threadId: 'thread-1',
+      commentId: 'comment-1',
+      voteType: 'neutral',
+    })(dispatch, getState);
+
+    // assert
+    expect(dispatch).toHaveBeenCalledWith(
+      applyVoteCommentActionCreator({
+        userId: fakeAuthUser.id,
+        commentId: 'comment-1',
+        voteType: 0,
+      }),
+    );
+  });
+
+  it('should throw an error if invalid vote type is given and cancel the vote change', async () => {
+    // arrange
+    const getState = () => ({ authUser: fakeAuthUser });
+    const dispatch = vi.fn();
+
+    // action
+    try {
+      await asyncApplyVoteComment({
+        threadId: 'thread-1',
+        commentId: 'comment-1',
+        voteType: 'xxxxxx',
+      })(dispatch, getState);
+      expect.fail('Promise should have been rejected');
+    } catch (error) {
+      expect(error).toEqual(new Error('Tipe vote tidak didukung'));
+      expect(dispatch).toHaveBeenNthCalledWith(
+        1,
+        applyVoteCommentActionCreator({
+          userId: 'users-1',
+          commentId: 'comment-1',
+          voteType: 0,
+        }),
+      );
+      expect(dispatch).toHaveBeenNthCalledWith(
+        2,
+        applyVoteCommentActionCreator({
+          userId: 'users-1',
+          commentId: 'comment-1',
+          voteType: 0,
+        }),
+      );
+    }
+  });
+
+  it('should dispatch apply and unapply vote when up vote failed', async () => {
+    // arrange
+    api.upvoteComment = () => Promise.reject(fakeErrorResponse);
+    const getState = () => ({ authUser: fakeAuthUser });
+    const dispatch = vi.fn();
+
+    // action: up vote thread
+    try {
+      await asyncApplyVoteComment({
+        threadId: 'thread-1',
+        commentId: 'comment-1',
+        voteType: 'up',
+      })(dispatch, getState);
+      expect.fail('Promise should have been rejected');
+    } catch (error) {
+      // assert
+      expect(error).toEqual(fakeErrorResponse);
+      expect(dispatch).toHaveBeenNthCalledWith(
+        1,
+        applyVoteCommentActionCreator({
+          userId: fakeAuthUser.id,
+          commentId: 'comment-1',
+          voteType: 1,
+        }),
+      );
+      expect(dispatch).toHaveBeenNthCalledWith(
+        2,
+        applyVoteCommentActionCreator({
+          userId: fakeAuthUser.id,
+          commentId: 'comment-1',
+          voteType: 0,
+        }),
+      );
+    }
+  });
+
+  it('should dispatch apply and unapply vote when down vote failed', async () => {
+    // arrange
+    api.downvoteComment = () => Promise.reject(fakeErrorResponse);
+    const getState = () => ({ authUser: fakeAuthUser });
+    const dispatch = vi.fn();
+
+    // action: down vote thread
+    try {
+      await asyncApplyVoteComment({
+        threadId: 'thread-1',
+        commentId: 'comment-1',
+        voteType: 'down',
+      })(dispatch, getState);
+      expect.fail('Promise should have been rejected');
+    } catch (error) {
+      // assert
+      expect(error).toEqual(fakeErrorResponse);
+      expect(dispatch).toHaveBeenNthCalledWith(
+        1,
+        applyVoteCommentActionCreator({
+          userId: fakeAuthUser.id,
+          commentId: 'comment-1',
+          voteType: -1,
+        }),
+      );
+      expect(dispatch).toHaveBeenNthCalledWith(
+        2,
+        applyVoteCommentActionCreator({
+          userId: fakeAuthUser.id,
+          commentId: 'comment-1',
+          voteType: 0,
+        }),
+      );
+    }
+  });
+
+  it('should dispatch apply and unapply vote when neutralize vote failed', async () => {
+    // arrange
+    api.neutralizeCommentVote = () => Promise.reject(fakeErrorResponse);
+    const getState = () => ({ authUser: fakeAuthUser });
+    const dispatch = vi.fn();
+
+    // action: neutralize vote thread
+    try {
+      await asyncApplyVoteComment({
+        threadId: 'thread-1',
+        commentId: 'comment-1',
+        voteType: 'neutral',
+      })(dispatch, getState);
+      expect.fail('Promise should have been rejected');
+    } catch (error) {
+      // assert
+      expect(error).toEqual(fakeErrorResponse);
+      expect(dispatch).toHaveBeenNthCalledWith(
+        1,
+        applyVoteCommentActionCreator({
+          userId: fakeAuthUser.id,
+          commentId: 'comment-1',
+          voteType: 0,
+        }),
+      );
+      expect(dispatch).toHaveBeenNthCalledWith(
+        2,
+        applyVoteCommentActionCreator({
+          userId: fakeAuthUser.id,
+          commentId: 'comment-1',
+          voteType: 0,
+        }),
+      );
+    }
+  });
+});

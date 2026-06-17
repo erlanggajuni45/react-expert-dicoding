@@ -125,6 +125,7 @@ const asyncApplyVoteComment = ({ threadId, commentId, voteType }) => {
 export {
   ActionType,
   receiveThreadDetailActionCreator,
+  addCommentThreadActionCreator,
   asyncGetThreadDetail,
   asyncAddCommentThread,
   applyVoteThreadDetailActionCreator,

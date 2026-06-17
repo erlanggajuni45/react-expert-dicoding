@@ -15,7 +15,7 @@ describe('authUserReducer function', () => {
     expect(nextState).toEqual(initialState);
   });
 
-  it('should return the authed user state when given by SET_AUTH_USER action', () => {
+  it('should return the authed user when given by SET_AUTH_USER action', () => {
     // arrange
     const initialState = null;
     const action = {
@@ -37,7 +37,7 @@ describe('authUserReducer function', () => {
     expect(nextState).toEqual(action.payload.authUser);
   });
 
-  it('should return the null state when given by UNSET_AUTH_USER action', () => {
+  it('should return null when given by UNSET_AUTH_USER action', () => {
     // arrange
     const initialState = {
       id: 'john_doe',

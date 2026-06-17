@@ -15,7 +15,7 @@ describe('leaderboardReducer function', () => {
     expect(nextState).toEqual(initialState);
   });
 
-  it('should return the leaderboard state when given by RECEIVE_LEADERBOARD action', () => {
+  it('should return the leaderboard when given by RECEIVE_LEADERBOARD action', () => {
     // arrange
     const initialState = [];
     const action = {

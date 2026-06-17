@@ -117,5 +117,7 @@ describe('asyncUnsetAuthUser thunk', () => {
     expect(dispatch).toHaveBeenNthCalledWith(1, startLoadingActionCreator());
     expect(dispatch).toHaveBeenNthCalledWith(2, unsetAuthUserActionCreator());
     expect(dispatch).toHaveBeenNthCalledWith(3, finishLoadingActionCreator());
+
+    expect(api.putAccessToken).toHaveBeenCalledWith('');
   });
 });

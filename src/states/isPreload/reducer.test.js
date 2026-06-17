@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import isPreloadReducer from './reducer';
 import { ActionType } from './action';
 
-describe('isPreloadReducers function', () => {
+describe('isPreloadReducer function', () => {
   it('should return the initial state when given by unknown action', () => {
     // arrange
     const initialState = true;

@@ -7,8 +7,19 @@ import { MemoryRouter } from 'react-router';
 import matchers from '@testing-library/jest-dom/matchers';
 import { configureStore } from '@reduxjs/toolkit';
 import userEvent from '@testing-library/user-event';
+import { asyncAddCommentThread } from '../states/threadDetail/action';
+import { toast } from 'sonner';
 
-vi.mock('../states/threadDetail/action', () => ({ asyncAddCommentThread: vi.fn() }));
+vi.mock('../states/threadDetail/action', () => ({
+  asyncAddCommentThread: vi.fn(),
+}));
+
+vi.mock('sonner', () => ({
+  toast: {
+    success: vi.fn(),
+    error: vi.fn(),
+  },
+}));
 
 const mockDispatch = vi.fn();
 vi.mock('react-redux', async (importOriginal) => {
@@ -51,6 +62,7 @@ describe('CommentPost component', () => {
   afterEach(() => {
     cleanup();
     vi.clearAllMocks();
+    vi.resetAllMocks();
   });
 
   it('should show "Invalid Payload" if props are missing or invalid', () => {
@@ -137,9 +149,6 @@ describe('CommentPost component', () => {
 
   it('should dispatch action and clear input when submit button is clicked', async () => {
     // arrange
-    const { toast } = await import('sonner');
-    toast.success = vi.fn();
-
     renderWithContext(
       <CommentPost
         threadId='thread-id'
@@ -155,6 +164,10 @@ describe('CommentPost component', () => {
     await userEvent.click(submitButton);
 
     // assert
+    expect(asyncAddCommentThread).toHaveBeenCalledWith({
+      threadId: 'thread-id',
+      content: 'ini komentar',
+    });
     expect(mockDispatch).toHaveBeenCalled();
     expect(toast.success).toHaveBeenCalledWith('Berhasil menambahkan komentar!');
     expect(commentInput).toHaveValue('');
@@ -162,11 +175,8 @@ describe('CommentPost component', () => {
 
   it('should show error toast when failed to add comment', async () => {
     // arrange
-    const { toast } = await import('sonner');
-    toast.error = vi.fn();
-
     const errorMessage = 'Failed to add comment';
-    mockDispatch.mockImplementation(() => {
+    mockDispatch.mockImplementationOnce(() => {
       throw new Error(errorMessage);
     });
 

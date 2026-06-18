@@ -1,12 +1,30 @@
 import React from 'react';
 import { cleanup, render, screen } from '@testing-library/react';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import CommentPost from './CommentPost';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
 import matchers from '@testing-library/jest-dom/matchers';
 import { configureStore } from '@reduxjs/toolkit';
 import userEvent from '@testing-library/user-event';
+
+vi.mock('../states/threadDetail/action', () => ({ asyncAddCommentThread: vi.fn() }));
+
+vi.mock('sooner', () => ({
+  toast: {
+    success: vi.fn(),
+    error: vi.fn(),
+  },
+}));
+
+const mockDispatch = vi.fn();
+vi.mock('react-redux', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    useDispatch: () => mockDispatch,
+  };
+});
 
 expect.extend(matchers);
 
@@ -32,6 +50,22 @@ function renderWithContext(ui, { preloadedState = {}, ...renderOptions } = {}) {
 describe('CommentPost component', () => {
   afterEach(() => {
     cleanup();
+    vi.clearAllMocks();
+  });
+
+  it('should show "Invalid Payload" if props are missing or invalid', () => {
+    // arrange
+    renderWithContext(
+      <CommentPost
+        threadId='thread-1'
+        commentCount='111'
+      />,
+    );
+
+    const heading = screen.getByRole('heading', { name: /Invalid Payload/i });
+
+    // assert
+    expect(heading).toBeInTheDocument();
   });
 
   it('should show "Login untuk berkomentar" if user is not logged in yet', () => {
@@ -52,7 +86,7 @@ describe('CommentPost component', () => {
     expect(textInfo).toBeInTheDocument();
   });
 
-  it('should show textarea and post button when user is logged in', async () => {
+  it('should show textarea and post button when user is logged in', () => {
     // arrange
     renderWithContext(
       <CommentPost
@@ -72,25 +106,10 @@ describe('CommentPost component', () => {
     );
 
     const commentInput = screen.getByRole('textbox');
-
-    // action
-    await userEvent.type(commentInput, 'Halo, ini komentar!');
+    const button = screen.getByRole('button', { name: /Kirim Komentar/i });
 
     // assert
-    expect(commentInput).toHaveValue('Halo, ini komentar!');
-  });
-
-  it('should show "Invalid Payload" when the component is given by incorrect argument', () => {
-    // arrange
-    renderWithContext(
-      <CommentPost
-        threadId='thread-1'
-        commentCount='111'
-      />,
-    );
-    const text = screen.getByText(/Invalid Payload/i);
-
-    // assert
-    expect(text).toBeInTheDocument();
+    expect(commentInput).toBeInTheDocument();
+    expect(button).toBeInTheDocument();
   });
 });

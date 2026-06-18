@@ -34,3 +34,11 @@ WithIdeaCategory.args = {
     selected: 'Idea',
     onSelected: () => { },
 };
+
+export const InvalidPayload = Template.bind({});
+InvalidPayload.args = {
+    categories: null,
+    selected: null,
+    onSelected: null,
+};
+

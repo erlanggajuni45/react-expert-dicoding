@@ -10,13 +10,6 @@ import userEvent from '@testing-library/user-event';
 
 vi.mock('../states/threadDetail/action', () => ({ asyncAddCommentThread: vi.fn() }));
 
-vi.mock('sooner', () => ({
-  toast: {
-    success: vi.fn(),
-    error: vi.fn(),
-  },
-}));
-
 const mockDispatch = vi.fn();
 vi.mock('react-redux', async (importOriginal) => {
   const actual = await importOriginal();
@@ -47,6 +40,13 @@ function renderWithContext(ui, { preloadedState = {}, ...renderOptions } = {}) {
   return { store, ...render(ui, { wrapper, ...renderOptions }) };
 }
 
+const authUser = {
+  id: 'john_doe',
+  name: 'John Doe',
+  email: 'john@example.com',
+  avatar: 'https://generated-image-url.jpg',
+};
+
 describe('CommentPost component', () => {
   afterEach(() => {
     cleanup();
@@ -55,12 +55,7 @@ describe('CommentPost component', () => {
 
   it('should show "Invalid Payload" if props are missing or invalid', () => {
     // arrange
-    renderWithContext(
-      <CommentPost
-        threadId='thread-1'
-        commentCount='111'
-      />,
-    );
+    renderWithContext(<CommentPost commentCount='111' />);
 
     const heading = screen.getByRole('heading', { name: /Invalid Payload/i });
 
@@ -94,14 +89,7 @@ describe('CommentPost component', () => {
         commentCount={1}
       />,
       {
-        preloadedState: {
-          authUser: {
-            id: 'john_doe',
-            name: 'John Doe',
-            email: 'john@example.com',
-            avatar: 'https://generated-image-url.jpg',
-          },
-        },
+        preloadedState: { authUser },
       },
     );
 
@@ -111,5 +99,91 @@ describe('CommentPost component', () => {
     // assert
     expect(commentInput).toBeInTheDocument();
     expect(button).toBeInTheDocument();
+  });
+
+  it('should handle comment typing correctly', async () => {
+    // arrange
+    renderWithContext(
+      <CommentPost
+        threadId='thread-1'
+        commentCount={1}
+      />,
+      { preloadedState: { authUser } },
+    );
+
+    const commentInput = screen.getByRole('textbox');
+
+    // action
+    await userEvent.type(commentInput, 'Ini komentar!');
+
+    // assert
+    expect(commentInput).toHaveValue('Ini komentar!');
+  });
+
+  it('should disable submit button when loadingCount > 0', () => {
+    // arrange
+    renderWithContext(
+      <CommentPost
+        threadId='thread-1'
+        commentCount={1}
+      />,
+      { preloadedState: { authUser, ui: { loadingCount: 1 } } },
+    );
+    const submitButton = screen.getByRole('button', { name: /kirim komentar/i });
+
+    // assert
+    expect(submitButton).toBeDisabled();
+  });
+
+  it('should dispatch action and clear input when submit button is clicked', async () => {
+    // arrange
+    const { toast } = await import('sonner');
+    toast.success = vi.fn();
+
+    renderWithContext(
+      <CommentPost
+        threadId='thread-id'
+        commentCount={1}
+      />,
+      { preloadedState: { authUser } },
+    );
+    const commentInput = screen.getByRole('textbox');
+    const submitButton = screen.getByRole('button', { name: /kirim komentar/i });
+
+    // action
+    await userEvent.type(commentInput, 'ini komentar');
+    await userEvent.click(submitButton);
+
+    // assert
+    expect(mockDispatch).toHaveBeenCalled();
+    expect(toast.success).toHaveBeenCalledWith('Berhasil menambahkan komentar!');
+    expect(commentInput).toHaveValue('');
+  });
+
+  it('should show error toast when failed to add comment', async () => {
+    // arrange
+    const { toast } = await import('sonner');
+    toast.error = vi.fn();
+
+    const errorMessage = 'Failed to add comment';
+    mockDispatch.mockImplementation(() => {
+      throw new Error(errorMessage);
+    });
+
+    renderWithContext(
+      <CommentPost
+        threadId='thread-id'
+        commentCount={1}
+      />,
+      { preloadedState: { authUser } },
+    );
+    const submitButton = screen.getByRole('button', { name: /kirim komentar/i });
+
+    // action
+    await userEvent.click(submitButton);
+
+    // assert
+    expect(mockDispatch).toHaveBeenCalled();
+    expect(toast.error).toHaveBeenCalledWith(errorMessage);
   });
 });

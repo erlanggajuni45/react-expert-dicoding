@@ -177,3 +177,9 @@ WithUserDownVote.parameters = {
     },
   },
 };
+
+export const InvalidProps = Template.bind({});
+InvalidProps.args = {
+  thread: null,
+  owner: null,
+};

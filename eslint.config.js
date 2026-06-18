@@ -1,11 +1,11 @@
 // For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
-import storybook from "eslint-plugin-storybook";
+import storybook from 'eslint-plugin-storybook';
 
 import js from '@eslint/js';
 import globals from 'globals';
 import pluginReact from 'eslint-plugin-react';
 import { defineConfig } from 'eslint/config';
-import pluginCypress from 'eslint-plugin-cypress/flat';
+import pluginCypress from 'eslint-plugin-cypress';
 import daStyle from 'eslint-config-dicodingacademy';
 
 export default defineConfig([{
@@ -22,4 +22,4 @@ export default defineConfig([{
   rules: {
     'react/prop-types': 'off',
   },
-}, ...storybook.configs["flat/recommended"]]);
+}, ...storybook.configs['flat/recommended']]);
